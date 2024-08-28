@@ -26,9 +26,10 @@ affinity: {}
 storage:
   name: irods-postgres-db-vol
   create: true
-  size: 1Gi
+  size: 16Gi
   accessMode: "ReadWriteMany"
   dataMountPath: /var/lib/postgresql/data
+  storageClass: cingergold
 
 podSecurityContext:
   fsGroup: 999
