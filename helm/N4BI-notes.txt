@@ -1,0 +1,51 @@
+N4BI K8s instructions to deploy a basic iRODS Provider (server) and DB.
+
+I recommend:
+  - That you clone the https://github.com/irods/irods_k8s onto your local system.
+  - Install kubectl and helm
+    - the version of kubectl you install must be within 2 version of your kubernetes cluster version
+  - Before you get started you will need request a kube config file k8s cluster namespaces for this deployment
+    and substitute it below in the <your namespace> placeholders.
+
+N4BI Helm values files:    
+  - These values files contain the configuration parameters inserted into the deployment script when using the helm commands below.
+  - Please place this file in the .../irods_k8s/helm/irods-db directory
+    - irods-postgres-values-n4bi.yaml
+  - Please place this file in the .../irods_k8s/helm/irods-service directory
+    - irods-provider-values-n4bi.yaml
+  
+iRODS DB installation
+  - Irods_k8s deployment scripts found at .../irods_k8s/helm/irods-db
+  - Insure you are in the .../irods_k8s/helm/ directory when you run these helm commands
+  - Deployment command line: 
+    - helm -n <your namespace> upgrade --install --set image.repository="postgres" --set image.tag="14.8" -f ./irods-db/irods-postgres-values-n4bi.yaml provider-postgres-14-8 ./irods-db/
+  - Deployment removal command line:
+    - helm -n <your namespace> delete provider-postgres-14-8
+
+iRODS Provider installation
+  - irods_k8s deployment scripts found at https://github.com/irods/irods_k8s/helm/irods-service
+  - Insure you are in the .../irods_k8s/helm/ directory when you run these commands
+  - Deployment command line:       
+    - helm -n <your namespace> upgrade --install --set image.os="ubuntu" --set image.os_version="20.04" -f ./irods-service/irods-provider-values-n4bi.yaml provider-2004 ./irods-service/
+  - Deployment removal command line:
+    - helm -n <your namespace> delete provider-2004
+    
+Notes and caveats:
+  - currently there are a couple of k8s and iRODS standards with deployment names
+    - this is due to 
+      - k8s deployment name becomes the pod HOSTNAME.
+      - these need to be carefully crafted because iRODS needs to keep track of hostnames.  
+    - iRODS Provider hostnames should have 2 parts, connected with a hyphen
+      - lowercase alphanumerics only, no whitespace or special characters (other than the required hyphen).
+      - we usually use the type of irods service (consumer or provider) followed by the OS version.
+  - the DBMS and OS base images are specified on the helm command line. 
+    - we only support ubuntu and postgres base images in these deployment templates.
+
+For the most part these scripts should run right out of the box. 
+  - If they dont there are probably some things to address that are unique to the configuration of the k8s cluster.
+  - The persistent volume mounts are very vanilla in this deploy. You will probably need some guidance from your cloud team. 
+    on how to mount S3 buckets (clever storage classes i suspect) on your k8s cluster.
+  - There are no public ingresses defined in the iRODS Provider deployment
+    - This too will probably need some guidance from your cloud team.
+    - Note that an ingress isnt needed for the DBMS. 
+  

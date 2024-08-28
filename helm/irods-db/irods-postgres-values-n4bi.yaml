@@ -1,0 +1,82 @@
+# BSD 3-Clause All rights reserved.
+#
+# SPDX-License-Identifier: BSD 3-Clause
+
+# Default values for irods-db.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ""
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount: {}
+podAnnotations: {}
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+storage:
+  name: irods-postgres-db-vol
+  create: true
+  size: 1Gi
+  accessMode: "ReadWriteMany"
+  dataMountPath: /var/lib/postgresql/data
+
+podSecurityContext:
+  fsGroup: 999
+
+securityContext:
+  runAsUser: 999
+  runAsNonRoot: true
+
+service:
+  name: service-port
+  type: ClusterIP
+  protocol: TCP
+  port: 5432
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+irodsInitDB:
+  init_postgres: true
+  user: "irods"
+  password: "testpassword"
+  initScript: "init-irods-pg-db.sh"
+
+envParams:
+  param1:
+    envParamName: "POSTGRES_USER"
+    envParamValue: "postgres"
+  param2:
+    envParamName: "POSTGRES_PASSWORD"
+    envParamValue: "testpassword"
+  param3:
+    envParamName: "PGDATA"
+    envParamValue: "/var/lib/postgresql/data/db_data"
+
+dataVolumes:
+  name: data-vol
+  claimName: irods-pvc
+
+backupImage:
+  repository: containers.renci.org/irods/db-backup-job
+  tag: "latest"
+  pullPolicy: Always
+
+backupSecurityContext:
+  runAsUser: 999
+  fsGroup: 999
+  runAsGroup: 999

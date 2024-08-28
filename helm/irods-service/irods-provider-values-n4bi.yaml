@@ -1,0 +1,58 @@
+# BSD 3-Clause All rights reserved.
+#
+# SPDX-License-Identifier: BSD 3-Clause
+
+# Default values for irods-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: containers.renci.org/irods/irods-
+
+initContainer: false
+
+serviceInit:
+  isProvider: true
+  adminName: "rods"
+  adminPassword: "rods"
+  dbUsername: "irods"
+  dbPassword: "testpassword"
+  dbHostName: "provider-postgres-14-8"
+  initScriptMountPath: /irods/irodsProviderInstall.sh
+  initScriptName: "irodsProviderInstall.sh"
+  serviceAccountName: "irods"
+  serviceAccountGroup: "irods"
+  serviceInitMountPath: /irods/providerInit.json
+  serviceInitName: "providerInit.json"
+
+storage:
+  var:
+    name: irods-var-vol
+    create: true
+    size: 1Gi
+    accessMode: "ReadWriteMany"
+    mountPath: /var/lib/irods
+
+  zone:
+    name: irods-zone-vol
+    zoneName: "tempZone"
+    create: true
+    size: 1Gi
+    accessMode: "ReadWriteMany"
+    mountPath: /tempZone/home/rods
+
+  opt:
+    name: irods-opt-vol
+    create: true
+    size: 1Gi
+    accessMode: "ReadWriteMany"
+    mountPath: /opt
+
+service:
+  type: ClusterIP
+  primaryPort: 1247
+  secondaryPort: 1248
+  minPort: 20000
+  maxPort: 20200
