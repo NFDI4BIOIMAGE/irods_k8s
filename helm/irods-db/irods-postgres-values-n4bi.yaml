@@ -29,7 +29,7 @@ storage:
   size: 16Gi
   accessMode: "ReadWriteMany"
   dataMountPath: /var/lib/postgresql/data
-  storageClass: cingergold
+  storageClass: cindergold
 
 podSecurityContext:
   fsGroup: 999
