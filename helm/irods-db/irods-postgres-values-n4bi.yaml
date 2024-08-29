@@ -18,7 +18,6 @@ nameOverride: ""
 fullnameOverride: ""
 serviceAccount: {}
 podAnnotations: {}
-resources: {}
 nodeSelector: {}
 tolerations: []
 affinity: {}
@@ -81,3 +80,12 @@ backupSecurityContext:
   runAsUser: 999
   fsGroup: 999
   runAsGroup: 999
+
+resources:
+  limits:
+    ephemeral-storage: 256Mi
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    ephemeral-storage: 50Mi
+    memory: 128Mi
