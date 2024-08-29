@@ -83,6 +83,7 @@ backupSecurityContext:
 
 resources:
   limits:
+    cpu: 250m
     ephemeral-storage: 256Mi
     memory: 256Mi
   requests:
