@@ -25,7 +25,7 @@ affinity: {}
 storage:
   name: irods-postgres-db-vol
   create: true
-  size: 16Gi
+  size: 4Gi
   accessMode: "ReadWriteMany"
   dataMountPath: /var/lib/postgresql/data
   storageClass: cindergold
