@@ -26,7 +26,7 @@ storage:
   name: irods-postgres-db-vol
   create: true
   size: 4Gi
-  accessMode: "ReadWriteMany"
+  accessMode: "ReadWriteOnce"
   dataMountPath: /var/lib/postgresql/data
   storageClass: cindergold
 
@@ -36,6 +36,7 @@ podSecurityContext:
 securityContext:
   runAsUser: 999
   runAsNonRoot: true
+  runAsGroup: 999
 
 service:
   name: service-port
