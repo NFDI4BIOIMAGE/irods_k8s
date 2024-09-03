@@ -14,6 +14,7 @@ spec:
   resources:
     requests:
       storage: {{ .Values.storage.opt.size }}
+  storageClassName: {{ .Values.storage.opt.storageClass }}
 {{ end }}
 {{ if .Values.storage.var }}
 ---
@@ -27,6 +28,7 @@ spec:
   resources:
     requests:
       storage: {{ .Values.storage.var.size }}
+  storageClassName: {{ .Values.storage.var.storageClass }}
 {{ end }}
 {{ if .Values.storage.zone }}
 ---
@@ -40,4 +42,5 @@ spec:
   resources:
     requests:
       storage: {{ .Values.storage.zone.size }}
+  storageClassName: {{ .Values.storage.zone.storageClass }}
 {{ end }}

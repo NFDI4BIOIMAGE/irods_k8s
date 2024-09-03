@@ -27,6 +27,15 @@ serviceInit:
   serviceInitMountPath: /irods/providerInit.json
   serviceInitName: "providerInit.json"
 
+resources:
+  limits:
+    ephemeral-storage: 512Mi
+    cpu: 2000m
+    memory: 16Gi
+  requests:
+    cpu: 250m
+    memory: 2Gi
+
 storage:
   var:
     name: irods-var-vol
@@ -34,6 +43,7 @@ storage:
     size: 1Gi
     accessMode: "ReadWriteMany"
     mountPath: /var/lib/irods
+    storageClass: manilabronze
 
   zone:
     name: irods-zone-vol
@@ -42,6 +52,7 @@ storage:
     size: 1Gi
     accessMode: "ReadWriteMany"
     mountPath: /tempZone/home/rods
+    storageClass: manilabronze
 
   opt:
     name: irods-opt-vol
@@ -49,6 +60,7 @@ storage:
     size: 1Gi
     accessMode: "ReadWriteMany"
     mountPath: /opt
+    storageClass: manilabronze
 
 service:
   type: ClusterIP
