@@ -8,7 +8,7 @@ spec:
   servers:
     - port:
         number: 1247
-        name: tcp
+        name: tcp-irods
         protocol: TCP
       hosts:
         # hosts are restricted and need to be apply for in the project application.

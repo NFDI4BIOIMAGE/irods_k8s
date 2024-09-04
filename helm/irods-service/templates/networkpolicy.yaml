@@ -16,6 +16,7 @@ spec:
           k8s:io.kubernetes.pod.namespace: istio-ingressgateway
       toPorts:
         - ports:
-            - port: "1247"
+            - name: tcp-irods
+              port: "1247"
               protocol: TCP
   egress: []
