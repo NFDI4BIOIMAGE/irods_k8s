@@ -1,0 +1,56 @@
+list of troubleshooting kubectl commands and observations.
+
+your cmdline:     
+-----------------
+helm --debug -n n4bi-irods upgrade --install --set image.repository="postgres" --set image.tag="14.8" -f ./irods-db/irods-postgres-values-n4bi.yaml provider-postgres-14-8 ./irods-db/ --wait
+
+
+observations:
+---------------
+i looked over your resultant deployment script. 
+  - the only unknown for me is the storage class you are using. i think we should keep an eye on that.
+  - also, you have specified a generous amount of disk space for the DB (16Gi, does 16Gi max out your quota?). 
+    - note this DB is tiny and will run for quite a while with just 1Gi. this is one of those things that should be monitored over time and adjusted accordingly
+  - i neglected to specify cpu/memory resources in your values file. sorry about that.
+    - i have included another values file that you should substitue in.
+    - otherwise, please replace "resources:{}" in your values file with the following. 
+      these are bare minimum amounts and have the potential to be rejected depending on your default cluster allocations.
+      this is another one of those things that should be monitored over time and adjusted accordingly:
+      
+      resources:
+        limits:
+          ephemeral-storage: 256Mi
+          memory: 256Mi
+        requests:
+          cpu: 500m
+          ephemeral-storage: 50Mi
+          memory: 128Mi
+               
+
+things to try
+------------------
+ - i suggest that you completely remove whatever remnants of the deploy that exist before retrying the install.
+   - please see below (DB stateful set removal) on how to remove the stateful set and PVC.
+ - on your next attempt i also suggest that you:
+   - remove the "--wait" on the command line. not sure if using this may invoke a timeout on your cluster.
+   - within a few seconds of executing your helm install command run the command below. it will allow you to to watch the pod standup progression.
+     and may provide clues.
+     - kubectl -n n4bi-irods get pod provider-postgres-14-8-0 -w                                                                                                               
+                                                                                                                                                       
+
+otherwise here are some commands to do some forensics of the stand up.
+these should all exist after the install. if any of them look funky or dont exist we should focus troubleshooting them.
+-----------------
+kubectl -n n4bi-irods describe statefulset provider-postgres-14-8
+kubectl -n n4bi-irods get pod provider-postgres-14-8-0
+kubectl -n n4bi-irods describe service provider-postgres-14-8 
+kubectl -n n4bi-irods describe pvc provider-postgres-14-8
+kubectl -n n4bi-irods describe configmap provider-postgres-14-8-scripts
+
+
+DB stateful set removal.
+note all services, pods and config maps will be removed with the deletion of a stateful set.
+however, a stateful set removal will leave the PVC in place, even after it has beed deleted. so an additonal command is needed to remove that.
+-----------------
+helm -n n4bi-irods delete provider-postgres-14-8
+kubectl -n n4bi-irods delete pvc provider-postgres-14-8-pvc
