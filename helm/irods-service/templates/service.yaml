@@ -9,6 +9,8 @@ metadata:
   name: {{ include "irods-service.fullname" . }}
   labels:
     {{- include "irods-service.labels" . | nindent 4 }}
+  annotations:
+    networking.istio.io/exportTo: istio-ingressgateway
 spec:
   type: {{ .Values.service.type }}
   ports:

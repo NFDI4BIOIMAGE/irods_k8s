@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: workshop
+  name: {{ include "irods-service.fullname" . }}-virt
   annotations:
     # Annotation to introduce a CNAME for the hosts below to the NIC Entry for
     # istio.ms1.k8s.wwu.de (istio ingress on region ms1)
@@ -9,13 +9,12 @@ metadata:
 spec:
   hosts:
     # hosts are restricted and need to be apply for in the project application.
-    - "kubernetes-workshop.uni-muenster.de"
-    - "kubernetes-workshop.wwu.de"
+    - "n4bi-irods.uni-muenster.de"
   gateways:
     - workshop
-  http:
+  tcp:
   - route:
     - destination:
-        host: frontend
+        host: {{ include "irods-service.fullname" . }}
         port:
-          number: 80
+          number: 1247

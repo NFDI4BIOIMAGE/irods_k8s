@@ -5,9 +5,7 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      k8s:app: nginx
-      k8s:component: frontend
-      k8s:release: webserver
+      {{- include "irods-service.selectorLabels" . | nindent 6 }}
   ingress:
     - fromEndpoints:
       - matchLabels:
@@ -18,6 +16,6 @@ spec:
           k8s:io.kubernetes.pod.namespace: istio-ingressgateway
       toPorts:
         - ports:
-            - port: "80"
+            - port: "1247"
               protocol: TCP
   egress: []
