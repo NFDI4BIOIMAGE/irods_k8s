@@ -11,7 +11,7 @@ spec:
     # hosts are restricted and need to be apply for in the project application.
     - "n4bi-irods.uni-muenster.de"
   gateways:
-    - workshop
+    - n4bi-irods-gateway
   tcp:
   - route:
     - destination:
