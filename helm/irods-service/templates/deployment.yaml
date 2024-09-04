@@ -61,14 +61,14 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.service }}
           ports:
-            - name: primary-port
+            - name: tcp-pri-port
               containerPort: {{ .Values.service.primaryPort }}
               protocol: TCP
-            - name: secondary-port
+            - name: tcp-sec-port
               containerPort: {{ .Values.service.secondaryPort }}
               protocol: TCP
             {{- range untilStep (int .Values.service.minPort) (int .Values.service.maxPort) 1 }}
-            - name: svc-port-{{ . }}
+            - name: tcp-s-prt-{{ . }}
               containerPort: {{ . }}
               protocol: TCP
             {{- end }}

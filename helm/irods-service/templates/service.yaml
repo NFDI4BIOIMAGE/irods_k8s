@@ -14,16 +14,16 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - name: primary-port
+    - name: tcp-pri-port
       port: {{ .Values.service.primaryPort }}
       targetPort: {{ .Values.service.primaryPort }}
       protocol: TCP
-    - name: secondary-port
+    - name: tcp-sec-port
       port: {{ .Values.service.secondaryPort }}
       targetPort: {{ .Values.service.secondaryPort }}
       protocol: TCP
     {{- range untilStep (int .Values.service.minPort) (int .Values.service.maxPort) 1 }}
-    - name: svc-port-{{ . }}
+    - name: tcp-s-prt-{{ . }}
       port: {{ . }}
       targetPort: {{ . }}
       protocol: TCP
